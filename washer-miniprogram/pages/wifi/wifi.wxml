@@ -1,0 +1,70 @@
+<!--pages/wifi/wifi.wxml-->
+<view class="page">
+  <view class="hero">
+    <view class="hero-icon hero-icon-{{wifiStatusClass}}"></view>
+    <view class="hero-title">{{wifiStatusText}}</view>
+    <view class="hero-sub" wx:if="{{wifiStatus === 'connected'}}">{{ssid}} · {{ip}}</view>
+    <view class="hero-sub" wx:else>通过蓝牙为设备配置 WiFi，配好后自动加入苹果家庭</view>
+  </view>
+  <view class="form" wx:if="{{wifiStatus !== 'connected' && wifiStatus !== 'connecting'}}">
+    <button class="scan-btn" bindtap="onScanWifi" disabled="{{scanning}}">
+      <view class="scan-icon {{scanning ? 'scanning' : ''}}"></view>
+      <text>{{scanning ? '扫描中...' : '扫描附近 WiFi'}}</text>
+    </button>
+    <view class="scan-list" wx:if="{{scanList.length > 0}}">
+      <view class="scan-msg">{{scanMsg}}</view>
+      <view class="scan-item {{inputSsid === item.ssid ? 'selected' : ''}}" wx:for="{{scanList}}" wx:key="ssid" data-ssid="{{item.ssid}}" bindtap="onSelectWifi">
+        <view class="scan-signal scan-signal-{{item.signalLevel}}"></view>
+        <view class="scan-ssid">{{item.ssid}}</view>
+        <view class="scan-lock" wx:if="{{item.enc > 0}}"></view>
+      </view>
+    </view>
+    <view class="scan-empty" wx:if="{{scanMsg && scanList.length === 0}}">{{scanMsg}}</view>
+    <view class="form-card">
+      <view class="field">
+        <view class="field-label">WiFi 名称</view>
+        <input class="field-input" placeholder="从上面选择或手动输入" placeholder-class="field-placeholder" value="{{inputSsid}}" bindinput="onSsidInput" maxlength="32" />
+      </view>
+      <view class="field">
+        <view class="field-label">密码</view>
+        <input class="field-input" placeholder="输入 WiFi 密码" placeholder-class="field-placeholder" password value="{{inputPwd}}" bindinput="onPwdInput" maxlength="64" />
+      </view>
+    </view>
+    <button class="submit-btn" bindtap="onSubmit" disabled="{{!inputSsid}}">
+      <view class="submit-icon"></view>
+      <text>开始配网</text>
+    </button>
+    <view class="tip">
+      <view class="tip-title">配网说明</view>
+      <view class="tip-text">1. 确保手机蓝牙已连接 Rinse-设备</view>
+      <view class="tip-text">2. 点"扫描附近 WiFi"选一个，或手动输入</view>
+      <view class="tip-text">3. 输密码，配网成功后设备自动重启</view>
+      <view class="tip-text">4. 重连蓝牙后，到苹果"家庭"App 添加配件</view>
+      <view class="tip-text" style="margin-top:12rpx;color:#64748b">配对码：466-22-6688</view>
+    </view>
+  </view>
+  <view class="progress" wx:if="{{wifiStatus === 'connecting' || wifiStatus === 'saving' || wifiStatus === 'reboot'}}">
+    <view class="step-list">
+      <view class="step {{wifiStatus === 'saving' || wifiStatus === 'reboot' || wifiStatus === 'connecting' ? 'done' : ''}}"><view class="step-dot"></view><view class="step-text">发送 WiFi 信息</view></view>
+      <view class="step {{wifiStatus === 'reboot' || wifiStatus === 'connecting' ? 'done' : ''}}"><view class="step-dot"></view><view class="step-text">设备保存并重启</view></view>
+      <view class="step {{wifiStatus === 'connecting' ? 'active' : ''}}"><view class="step-dot"></view><view class="step-text">设备连接 WiFi</view></view>
+      <view class="step {{wifiStatus === 'connected' ? 'done' : ''}}"><view class="step-dot"></view><view class="step-text">完成，可加入苹果家庭</view></view>
+    </view>
+    <view class="spinner" wx:if="{{wifiStatus === 'connecting'}}"></view>
+    <view class="progress-text">{{progressText}}</view>
+  </view>
+  <view class="connected" wx:if="{{wifiStatus === 'connected'}}">
+    <view class="info-card">
+      <view class="info-row"><view class="info-label">WiFi</view><view class="info-val">{{ssid}}</view></view>
+      <view class="info-row"><view class="info-label">IP 地址</view><view class="info-val">{{ip}}</view></view>
+      <view class="info-row"><view class="info-label">信号强度</view><view class="info-val">{{rssi}} dBm</view></view>
+    </view>
+    <view class="next-steps">
+      <view class="next-title">下一步：加入苹果家庭</view>
+      <view class="next-step"><view class="next-num">1</view><view class="next-text">iPhone 打开"家庭"App → 添加配件</view></view>
+      <view class="next-step"><view class="next-num">2</view><view class="next-text">选"更多选项" → "我手动输入代码"</view></view>
+      <view class="next-step"><view class="next-num">3</view><view class="next-text">输入配对码：466-22-6688</view></view>
+    </view>
+    <button class="reset-btn" bindtap="onReset">重新配网</button>
+  </view>
+</view>
