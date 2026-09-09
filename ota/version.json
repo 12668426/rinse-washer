@@ -1,6 +1,6 @@
 {
-  "version": "1.1.0",
-  "url": "https://github.com/12668426/rinse-washer/releases/download/v1.1.0/esp32_dual_washer.ino.bin",
-  "size": 1655168,
-  "notes": "WiFi 配网：新增附近 WiFi 扫描，选一个只输密码；固件版本号广播"
+  "version": "1.2.0",
+  "url": "https://github.com/12668426/rinse-washer/releases/download/v1.2.0/esp32_dual_washer.ino.bin",
+  "size": 0,
+  "notes": "WiFi 配网状态修复：重启后正确识别正在连接 WiFi 而非显示未配网；固件区分 unprovisioned(无凭据)/connecting(有凭据连接中)/connected 三种状态；超时重试时显示重新配网按钮"
 }
