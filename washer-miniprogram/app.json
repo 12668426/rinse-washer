@@ -1,0 +1,16 @@
+{
+  "pages": ["pages/index/index", "pages/device/device", "pages/wifi/wifi"],
+  "lazyCodeLoading": "requiredComponents",
+  "darkmode": true,
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#0c0a09",
+    "navigationBarTitleText": "Rinse",
+    "navigationBarTextStyle": "white"
+  },
+  "permission": {
+    "scope.userLocation": { "desc": "蓝牙扫描需要位置权限" }
+  },
+  "requiredPrivateInfos": ["getLocation"],
+  "sitemapLocation": "sitemap.json"
+}

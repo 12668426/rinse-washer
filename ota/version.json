@@ -1,0 +1,6 @@
+{
+  "version": "1.0.0",
+  "url": "https://github.com/你的用户名/rinse-washer/releases/download/v1.0.0/esp32_dual_washer.ino.bin",
+  "size": 0,
+  "notes": "初始版本：BTS7960 驱动 + 纯计时器 + 深色/浅色主题 + BLE OTA"
+}
