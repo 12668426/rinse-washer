@@ -331,7 +331,7 @@ void cmdSetWifi(const String& ssid, const String& pwd, Src from){
   prefs.putString("pwd",  pwd);
   prefs.end();
   // 通知小程序
-  bleSend("{\"wifi\":\"saving\",\"ssid\":"+ssid+"\"}\n");
+  bleSend("{\"wifi\":\"saving\",\"ssid\":\""+ssid+"\"}\n");
   delay(300);  // 确保发送出去
   // 标记 800ms 后重启
   scheduleReboot(800);
@@ -341,8 +341,8 @@ void cmdSetWifi(const String& ssid, const String& pwd, Src from){
 void cmdQueryWifi(Src from){
   String json = "{\"wifi\":\"";
   json += wifiConnected ? "connected" : "disconnected";
-  json += "\",\"ssid\":"+wifiSsid+"\"";
-  json += ",\"ip\":"+wifiIp+"\"";
+  json += "\",\"ssid\":\""+wifiSsid+"\"";
+  json += ",\"ip\":\""+wifiIp+"\"";
   json += ",\"rssi\":"+String(WiFi.RSSI());
   json += "}\n";
   bleSend(json);
@@ -430,7 +430,7 @@ void parseBleCmd(const String& line){
     }
     free(buf);
     // 回 ACK
-    bleSend(String("{\"ota\":\"ack\",\":") + extractField(line,"seq") + "}\n");
+    bleSend(String("{\"ota\":\"ack\",\"seq\":") + extractField(line,"seq") + "}\n");
   }
   else if(cmd=="ota_end" && otaActive){
     // 结束：校验并应用
@@ -559,10 +559,10 @@ void broadcastState(Src from){
   // BLE 推送（永远推，BLE 不会回环）
   // total = 当前环节总时长（秒），用于小程序显示当前环节倒计时
   uint32_t stageTotalSec = (stageDurMs>0) ? stageDurMs/1000 : 0;
-  String json = "{\"state\":"+stage+",\"stage\":"+stage+",\"remain\":"+String(rem)+",\"total\":"+String(stageTotalSec)+",\"temp\":"+(int)(t<0?-1:t);
+  String json = "{\"state\":\""+stage+"\",\"stage\":\""+stage+"\",\"remain\":"+String(rem)+",\"total\":"+String(stageTotalSec)+",\"temp\":"+(int)(t<0?-1:t);
   json += ",\"paused\":" + String(isPaused ? 1 : 0);
   json += ",\"ver\":\"" FW_VERSION "\"";
-  if(curStage==STAGE_ALARM && alarmMsg.length()) json += ",\"code\":\"E1\",\"msg\":"+alarmMsg+"\"";
+  if(curStage==STAGE_ALARM && alarmMsg.length()) json += ",\"code\":\"E1\",\"msg\":\""+alarmMsg+"\"";
   json += "}\n";
   bleSend(json);
 
@@ -640,7 +640,7 @@ void wifiTick(){
       Serial.printf("[WiFi] 连上 %s, IP=%s, RSSI=%d\n",
                     WiFi.SSID().c_str(), wifiIp.c_str(), WiFi.RSSI());
       // 通知小程序
-      bleSend("{\"wifi\":\"connected\",\"ssid\":"+String(WiFi.SSID().c_str())+"\",\"ip\":"+wifiIp+"\",\"rssi\":"+String(WiFi.RSSI())+"}\n");
+      bleSend("{\"wifi\":\"connected\",\"ssid\":\""+String(WiFi.SSID().c_str())+"\",\"ip\":\""+wifiIp+"\",\"rssi\":"+String(WiFi.RSSI())+"}\n");
       broadcastOnce = 0;
     } else {
       Serial.println("[WiFi] 断开，尝试重连...");
