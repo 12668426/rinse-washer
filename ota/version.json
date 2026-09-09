@@ -1,0 +1,6 @@
+{
+  "version": "1.1.0",
+  "url": "https://github.com/12668426/rinse-washer/releases/download/v1.1.0/esp32_dual_washer.ino.bin",
+  "size": 1655168,
+  "notes": "WiFi 配网：新增附近 WiFi 扫描，选一个只输密码；固件版本号广播"
+}
