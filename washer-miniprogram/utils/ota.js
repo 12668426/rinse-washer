@@ -1,7 +1,7 @@
 // utils/ota.js — 云端固件升级
 // 版本检查 + 下载 .bin + BLE 分包发送
 
-const VERSION_URL = 'https://你的用户名.github.io/rinse-washer/ota/version.json'
+const VERSION_URL = 'https://12668426.github.io/rinse-washer/ota/version.json'
 // 本地小程序内置版本（每次发新版 .bin 时同步改这里）
 const APP_FW_VERSION = '1.0.0'
 
