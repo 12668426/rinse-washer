@@ -1,4 +1,0 @@
-{
-  "desc": "Rinse 小程序",
-  "rules": [{ "action": "allow", "page": "*" }]
-}
