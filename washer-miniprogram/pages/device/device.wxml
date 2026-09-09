@@ -1,0 +1,118 @@
+<!--pages/device/device.wxml-->
+<view class="page state-{{connected ? 'connected' : 'idle'}}">
+
+  <!-- ===== Hero ===== -->
+  <view class="hero">
+    <view class="hero-icon-wrap">
+      <view class="hero-icon hero-icon-{{connected ? 'on' : 'off'}}"></view>
+      <view class="hero-pulse" wx:if="{{!connected}}"></view>
+    </view>
+    <view class="hero-title">{{connected ? '设备已连接' : '连接你的洗衣机'}}</view>
+    <view class="hero-sub">
+      {{autoConnecting ? '正在后台自动连接...' : (connected ? '可返回主页控制设备' : '确保手机蓝牙开启，设备已通电')}}
+    </view>
+  </view>
+
+  <!-- ===== 已配对设备（历史连接过） ===== -->
+  <view class="list paired" wx:if="{{paired.length > 0 && !connected}}">
+    <view class="list-head">
+      <text class="list-title">已配对设备</text>
+      <text class="list-sub">点击直接连接</text>
+    </view>
+    <view
+      class="device paired-item"
+      wx:for="{{paired}}"
+      wx:key="deviceId"
+      bindtap="handleConnect"
+      data-id="{{item.deviceId}}"
+      data-name="{{item.name}}"
+    >
+      <view class="device-icon"></view>
+      <view class="device-body">
+        <view class="device-name">{{item.name || 'Rinse-设备'}}</view>
+        <view class="device-id">{{item.deviceId}}</view>
+      </view>
+      <view class="device-paired-tag">已配对</view>
+      <view
+        class="device-remove"
+        catchtap="removePaired"
+        data-id="{{item.deviceId}}"
+      >×</view>
+    </view>
+  </view>
+
+  <!-- ===== 扫描按钮 ===== -->
+  <view class="scan-block">
+    <button class="scan-btn {{scanning ? 'scanning' : ''}}" bindtap="handleScan" disabled="{{scanning || connected}}">
+      <view class="scan-icon"></view>
+      <text>{{scanning ? '扫描中' : (connected ? '已连接' : '扫描新设备')}}</text>
+    </button>
+    <view class="radar" wx:if="{{scanning}}">
+      <view class="ring r1"></view>
+      <view class="ring r2"></view>
+      <view class="ring r3"></view>
+    </view>
+  </view>
+
+  <!-- ===== 扫描发现的设备 ===== -->
+  <view class="list" wx:if="{{devices.length}}">
+    <view class="list-head">
+      <text class="list-title">发现 {{devices.length}} 台设备</text>
+      <text class="list-sub">点击连接</text>
+    </view>
+    <view
+      class="device"
+      wx:for="{{devices}}"
+      wx:key="deviceId"
+      bindtap="handleConnect"
+      data-id="{{item.deviceId}}"
+      data-name="{{item.name}}"
+    >
+      <view class="device-icon"></view>
+      <view class="device-body">
+        <view class="device-name">{{item.name || '未知设备'}}</view>
+        <view class="device-id">{{item.deviceId}}</view>
+      </view>
+      <view class="device-rssi">
+        <view class="rssi-bars">
+          <view class="rssi-bar {{item.RSSI > -90 ? 'on' : ''}}"></view>
+          <view class="rssi-bar {{item.RSSI > -70 ? 'on' : ''}}"></view>
+          <view class="rssi-bar {{item.RSSI > -50 ? 'on' : ''}}"></view>
+        </view>
+        <view class="rssi-val">{{item.RSSI}}</view>
+      </view>
+      <view class="device-arrow"></view>
+    </view>
+  </view>
+
+  <!-- ===== 空状态 ===== -->
+  <view class="empty" wx:elif="{{scanned && !scanning}}">
+    <view class="empty-icon"></view>
+    <view class="empty-title">未发现 Rinse-设备</view>
+    <view class="empty-hint">请确认洗衣机已通电且蓝牙开启</view>
+  </view>
+
+  <!-- ===== 断开按钮 ===== -->
+  <view class="disc-block" wx:if="{{connected}}">
+    <button class="disc-btn" bindtap="handleDisconnect">断开连接</button>
+  </view>
+
+  <!-- ===== 固件升级（仅已连接时显示） ===== -->
+  <view class="ota-block" wx:if="{{connected}}">
+    <view class="ota-head">
+      <text class="ota-title">固件升级</text>
+      <text class="ota-sub">当前 {{curVer || '未知'}}</text>
+    </view>
+    <view class="ota-msg" wx:if="{{otaMsg}}">{{otaMsg}}</view>
+    <button class="ota-btn {{otaUploading ? 'uploading' : ''}}" bindtap="handleOta" disabled="{{otaUploading}}">
+      <view class="ota-icon"></view>
+      <text wx:if="{{otaStage === 'done'}}">重启设备</text>
+      <text wx:elif="{{otaUploading}}">{{otaProgress}}%</text>
+      <text wx:else>检查更新</text>
+    </button>
+    <view class="ota-track" wx:if="{{otaUploading || otaProgress > 0}}">
+      <view class="ota-fill" style="width: {{otaProgress}}%"></view>
+    </view>
+  </view>
+
+</view>
