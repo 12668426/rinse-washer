@@ -1,1 +1,1 @@
-PLACEHOLDER
+base64编码后的完整固件内容
